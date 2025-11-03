@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{11E306C4-B80B-4D6F-9DDC-EA7263C271E3}|Laba3_A\\Laba3_A.csproj|c:\\users\\user\\desktop\\laba3\\laba3_a\\laba3_a\\datatask.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{11E306C4-B80B-4D6F-9DDC-EA7263C271E3}|Laba3_A\\Laba3_A.csproj|solutionrelative:laba3_a\\datatask.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{11E306C4-B80B-4D6F-9DDC-EA7263C271E3}|Laba3_A\\Laba3_A.csproj|c:\\users\\user\\desktop\\laba3\\laba3_a\\laba3_a\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{11E306C4-B80B-4D6F-9DDC-EA7263C271E3}|Laba3_A\\Laba3_A.csproj|solutionrelative:laba3_a\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 311,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataTask.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\DataTask.cs",
+              "RelativeDocumentMoniker": "Laba3_A\\DataTask.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\DataTask.cs",
+              "RelativeToolTip": "Laba3_A\\DataTask.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T14:27:38.511Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Program.cs",
+              "RelativeDocumentMoniker": "Laba3_A\\Program.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Program.cs",
+              "RelativeToolTip": "Laba3_A\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T14:26:37.575Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
