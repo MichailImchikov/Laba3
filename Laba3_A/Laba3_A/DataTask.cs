@@ -17,7 +17,7 @@ namespace Laba3_A
             DirectiveTime = directiveTime;
             TransitionMatrix = transitionMatrix;
         }
-        public int Y(int i, int[] x)
+        public int Y(int i, int[] x)// i - номер заказа, x - порядок выполнения заказов
         {
             for (int position = 0; position < x.Length; position++)
             {
@@ -25,7 +25,7 @@ namespace Laba3_A
             }
             return -1;
         }
-        public int Z(int i, int[] x)
+        public int Z(int i, int[] x)// время выполнения i -го заказа при порядке x
         {
             int yi = Y(i, x);
             int time = TransitionMatrix[0, x[0]];
@@ -35,7 +35,7 @@ namespace Laba3_A
             }
             return time;
         }
-        public int W(int i, int[] x)
+        public int W(int i, int[] x)// ` штраф за просрочку i -го заказа при порядке x
         {
             int deliveryTime = Z(i, x);
             return deliveryTime > DirectiveTime[i] ? 1 : 0;
