@@ -17,5 +17,37 @@ namespace Laba3_A
             DirectiveTime = directiveTime;
             TransitionMatrix = transitionMatrix;
         }
+        public int Y(int i, int[] x)
+        {
+            for (int position = 0; position < x.Length; position++)
+            {
+                if (x[position] == i) return position;
+            }
+            return -1;
+        }
+        public int Z(int i, int[] x)
+        {
+            int yi = Y(i, x);
+            int time = TransitionMatrix[0, x[0]];
+            for (int index = 0; index < yi; index++)
+            {
+                time += TransitionMatrix[x[index], x[index + 1]];
+            }
+            return time;
+        }
+        public int W(int i, int[] x)
+        {
+            int deliveryTime = Z(i, x);
+            return deliveryTime > DirectiveTime[i] ? 1 : 0;
+        }
+        public int CalculateCriterion(int[] currentOrder)
+        {
+            int sum = 0;
+            for(int index=0; index < currentOrder.Length; index++)
+            {
+                sum += W(index, currentOrder);
+            }
+            return sum;
+        }
     }
 }

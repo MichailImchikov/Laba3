@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Laba3_A.csproj": {}
+    "C:\\Users\\wonst\\source\\repos\\Delivery\\Laba3_A\\Laba3_A\\Laba3_A.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Laba3_A.csproj": {
+    "C:\\Users\\wonst\\source\\repos\\Delivery\\Laba3_A\\Laba3_A\\Laba3_A.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Laba3_A.csproj",
+        "projectUniqueName": "C:\\Users\\wonst\\source\\repos\\Delivery\\Laba3_A\\Laba3_A\\Laba3_A.csproj",
         "projectName": "Laba3_A",
-        "projectPath": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\Laba3_A.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Laba3\\Laba3_A\\Laba3_A\\obj\\",
+        "projectPath": "C:\\Users\\wonst\\source\\repos\\Delivery\\Laba3_A\\Laba3_A\\Laba3_A.csproj",
+        "packagesPath": "C:\\Users\\wonst\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\wonst\\source\\repos\\Delivery\\Laba3_A\\Laba3_A\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "G:\\Visual Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wonst\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,8 +43,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -61,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
