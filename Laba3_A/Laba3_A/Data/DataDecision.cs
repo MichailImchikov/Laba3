@@ -1,7 +1,7 @@
 ﻿
 public class DataDecision
 {
-    public List<int> Perest;
+    public List<int> Perest = new();
 
 }
 

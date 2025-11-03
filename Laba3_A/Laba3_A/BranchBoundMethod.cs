@@ -1,5 +1,4 @@
-﻿
-class BranchBoundMethod
+﻿class BranchBoundMethod
 {
     private IBranching _branching;
     private ILowScore _lowScore;
@@ -20,11 +19,15 @@ class BranchBoundMethod
             OpenData = Enumerable.Range(1, data.CountOrders).ToList()
         };
         _sheetTree.Add(startSheet);
-        Run();
+        return Run();
     }
     private DataDecision Run()
     {
-        if(CheckStopCondition()) 
+        while(!CheckStopCondition())
+        {
+            //_branching = _branching.
+        }
+        return CreateNewDataDecision();
     }
     private bool CheckStopCondition()
     {
@@ -33,9 +36,11 @@ class BranchBoundMethod
     }
     private DataDecision CreateNewDataDecision()
     {
+        var buffList = new List<int>(_sheetTree[0].BakedData);
+        buffList.AddRange(_sheetTree[0].OpenData);
         return new DataDecision
         {
-            Perest = _sheetTree[0].BakedData.AddRange(_sheetTree[0].OpenData);
+            Perest = buffList
         };
     }
 }

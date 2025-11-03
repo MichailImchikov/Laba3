@@ -2,7 +2,7 @@
 
 class BaseLowScore : ILowScore
 {
-    public float GetLowScore(SheetTree node)
+    public float GetScore(SheetTree node)
     {
         var sumBakeOrder = node.BakedData.Select(x => node.Data.Z(x, node.BakedData.ToArray())).Sum();
         foreach (var oder in node.OpenData)
