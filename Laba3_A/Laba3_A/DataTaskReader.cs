@@ -11,6 +11,7 @@ namespace Laba3_A
     {
         // Единственный публичный метод
         public static List<DataTask> LoadAll()
+
         {
             var dir = ResolveTaskDirectory();
             if (!Directory.Exists(dir))
@@ -115,7 +116,7 @@ namespace Laba3_A
         {
             // 1) bin/.../Tak3
             var baseDir = AppContext.BaseDirectory;
-            var candidate = Path.Combine(baseDir, "Tak3");
+            var candidate = Path.Combine(baseDir, "Task3");
             if (Directory.Exists(candidate))
                 return candidate;
 
@@ -123,14 +124,14 @@ namespace Laba3_A
             var dir = new DirectoryInfo(baseDir);
             while (dir != null)
             {
-                candidate = Path.Combine(dir.FullName, "Tak3");
+                candidate = Path.Combine(dir.FullName, "Task3");
                 if (Directory.Exists(candidate))
                     return candidate;
                 dir = dir.Parent;
             }
 
             // 3) Фолбэк: текущая директория/Tak3
-            return Path.Combine(Directory.GetCurrentDirectory(), "Tak3");
+            return Path.Combine(Directory.GetCurrentDirectory(), "Task3");
         }
     }
 }
