@@ -1,10 +1,10 @@
 ﻿class BranchBoundMethod
 {
-    private IBranching _branching;
+    private ABranching _branching;
     private ILowScore _lowScore;
     private IHighScore _highScore;
     private List<SheetTree> _sheetTree = new();
-    public BranchBoundMethod(IBranching branching, ILowScore lowScore, IHighScore highScore)
+    public BranchBoundMethod(ABranching branching, ILowScore lowScore, IHighScore highScore)
     {
         _branching = branching;
         _lowScore = lowScore;
@@ -25,7 +25,7 @@
     {
         while(!CheckStopCondition())
         {
-            //_branching = _branching.
+            _sheetTree = _branching.Branching(_sheetTree);
         }
         return CreateNewDataDecision();
     }

@@ -1,6 +1,6 @@
 ﻿
 public interface ILowScore
 {
-    public float GetScore(SheetTree node);
+    public int GetScore(SheetTree node);
 }
 

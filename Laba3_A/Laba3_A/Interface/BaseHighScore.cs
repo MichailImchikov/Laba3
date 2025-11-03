@@ -1,15 +1,10 @@
 ﻿
 public class BaseHighScore : IHighScore
 {
-    private DataTask _task;
-    public BaseHighScore(DataTask task)
-    {
-        _task = new DataTask(task.CountOrders, task.DirectiveTime, task.TransitionMatrix);
-    }
-
+    DataTask _task;
     public float GetScore(SheetTree node)
     {
-        // Получаем текущую частичную перестановку из узла
+        _task = node.Data;
         List<int> currentSequence = node.BakedData;
         int k = currentSequence.Count;
 
