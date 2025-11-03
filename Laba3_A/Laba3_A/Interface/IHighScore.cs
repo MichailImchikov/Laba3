@@ -8,6 +8,6 @@ namespace Laba3_A.Interface
 {
     public interface IHighScore
     {
-        public float GetLowScore(NodeTree node);
+        public float GetHighScore(NodeTree node);
     }
 }
