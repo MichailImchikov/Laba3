@@ -1,4 +1,6 @@
-﻿namespace Laba3_A
+﻿using Laba3_A.Data;
+
+namespace Laba3_A
 {
     internal class Program
     {

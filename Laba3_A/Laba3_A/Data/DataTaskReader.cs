@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 
-namespace Laba3_A
+using System.Globalization;
+namespace Laba3_A.Data
 {
 
     public static class DataTaskReader
@@ -52,7 +48,7 @@ namespace Laba3_A
                 throw new FormatException($"—трока 2 в \"{path}\": ожидаетс€ {n} значений, получено {directive.Count}.");
 
             // ƒалее (n+1) строк матрицы, кажда€ по (n+1) значений
-            if (lines.Count < 2 + (n + 1))
+            if (lines.Count < 2 + n + 1)
                 throw new FormatException($"¬ \"{path}\": ожидаетс€ {n + 1} строк матрицы после строки 2, получено {lines.Count - 2}.");
 
             var size = n + 1;

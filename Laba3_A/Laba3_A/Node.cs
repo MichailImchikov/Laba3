@@ -1,32 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Laba3_A
+﻿
+public class SheetTree
 {
-    public class NodeTree 
+    public List<SheetTree> NextNodes = new();
+    public DataTask Data;
+    public List<int> BakedData;
+    public List<int> OpenData;
+    public List<SheetTree> GetSheets()
     {
-        public List<NodeTree> NextNodes = new();
-        public DataTask Data;
-        public List<int> BakedData;
-        public List<int> OpenData;
-        public List<NodeTree> GetSheets()
+        var listNodes = new List<SheetTree>();
+        if (NextNodes.Count == 0)
         {
-            var listNodes = new List<NodeTree>();
-            if (NextNodes.Count == 0) 
-            {
-                listNodes.Add(this);
-                return listNodes;
-            }
-            foreach (var node in NextNodes) 
-            {
-                listNodes.AddRange(node.GetSheets());
-            }
+            listNodes.Add(this);
             return listNodes;
         }
+        foreach (var node in NextNodes)
+        {
+            listNodes.AddRange(node.GetSheets());
+        }
+        return listNodes;
     }
-
-
 }
