@@ -31,8 +31,9 @@
     }
     private bool CheckStopCondition()
     {
-        if (_sheetTree.Count > 1) return false;
-        return _lowScore.GetScore(_sheetTree[0]) == _highScore.GetScore(_sheetTree[0]);
+        if (_sheetTree.Count == 1 && _lowScore.GetScore(_sheetTree[0]) == _highScore.GetScore(_sheetTree[0]))
+            return true;
+        return false;
     }
     private DataDecision CreateNewDataDecision()
     {

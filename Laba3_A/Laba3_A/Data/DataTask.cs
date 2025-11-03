@@ -38,7 +38,7 @@ public class DataTask
         int sum = 0;
         for (int index = 0; index < currentOrder.Length; index++)
         {
-            sum += W(index, currentOrder);
+            sum += W(index+1, currentOrder);
         }
         return sum;
     }
