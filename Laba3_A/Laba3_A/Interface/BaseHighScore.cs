@@ -46,9 +46,9 @@ public class BaseHighScore : IHighScore
         List<int> remaining = new List<int>();
         for (int i = 0; i < _task.CountOrders; i++)
         {
-            if (!sequence.Contains(i)) // предполагаем, что заказы нумеруются с 1
+            if (!sequence.Contains(i + 1)) // предполагаем, что заказы нумеруются с 1
             {
-                remaining.Add(i);
+                remaining.Add(i + 1);
             }
         }
         return remaining;
@@ -63,13 +63,13 @@ public class BaseHighScore : IHighScore
         // Время выполнения первого заказа
         if (sequence.Count >= 1)
         {
-            time += _task.TransitionMatrix[0, sequence[0]]; // t0x1
+            time += _task.TransitionMatrix[0, sequence[0] - 1]; // t0x1
         }
 
         // Сумма времен выполнения остальных заказов
         for (int i = 0; i < sequence.Count - 1; i++)
         {
-            time += _task.TransitionMatrix[sequence[i], sequence[i + 1]];
+            time += _task.TransitionMatrix[sequence[i] - 1, sequence[i + 1] - 1];
         }
 
         return time;
@@ -90,19 +90,19 @@ public class BaseHighScore : IHighScore
             if (sequence.Count > 0)
             {
                 // Добавляем время от последнего заказа к новому
-                totalTime += _task.TransitionMatrix[sequence[sequence.Count - 1], order];
+                totalTime += _task.TransitionMatrix[sequence[sequence.Count - 1] - 1, order - 1];
             }
             else
             {
                 // Если последовательность пустая, добавляем время от начального момента
-                totalTime += _task.TransitionMatrix[0, order];
+                totalTime += _task.TransitionMatrix[0, order - 1];
             }
 
             // Вычисляем вес
             float weight;
-            if (totalTime <= _task.DirectiveTime[order])
+            if (totalTime <= _task.DirectiveTime[order - 1])
             {
-                weight = _task.DirectiveTime[order] - totalTime;
+                weight = _task.DirectiveTime[order - 1] - totalTime;
             }
             else
             {
