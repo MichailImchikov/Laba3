@@ -1,0 +1,15 @@
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.AssemblyInfo.cs
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.sourcelink.json
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\bin\Debug\net8.0\Laba3_A.exe
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\bin\Debug\net8.0\Laba3_A.deps.json
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\bin\Debug\net8.0\Laba3_A.runtimeconfig.json
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\bin\Debug\net8.0\Laba3_A.dll
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\bin\Debug\net8.0\Laba3_A.pdb
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.dll
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\refint\Laba3_A.dll
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.pdb
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\Laba3_A.genruntimeconfig.cache
+C:\Users\User\Desktop\Laba3\Laba3_A\Laba3_A\obj\Debug\net8.0\ref\Laba3_A.dll
