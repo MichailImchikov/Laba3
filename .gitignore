@@ -1,18 +1,19 @@
-# Папки сборки и временные файлы
+
 bin/
 obj/
+vs/
 
-# Файлы журнала и временные файлы
+
 *.log
 *.tmp
 
-# Файлы пользовательских настроек Visual Studio
+
 *.suo
 *.user
 *.userosscache
 *.sln.iml
 *.csproj.user
 
-# Файлы, которые не должны быть под контролем версий
+
 appsettings.Development.json
 appsettings.Production.json
