@@ -2,10 +2,12 @@
 public class BaseHighScore : IHighScore
 {
     DataTask _task;
+    int j;
     public float GetScore(SheetTree node)
     {
         _task = node.Data;
         List<int> currentSequence = node.BakedData;
+        List<int> openData = new List<int>();
         int k = currentSequence.Count;
 
         // Если перестановка уже полная, вычисляем значение критерия
@@ -21,10 +23,11 @@ public class BaseHighScore : IHighScore
         int j = 0;
 
         // Шаг 2: Жадное добавление заказов
+        List<int> remainingOrders = new List<int>();
         while (sequence.Count < _task.CountOrders)
         {
             // Получаем оставшиеся заказы
-            List<int> remainingOrders = GetRemainingOrders(sequence);
+             remainingOrders = GetRemainingOrders(sequence);
 
             // Вычисляем текущее время выполнения до момента добавления нового заказа
             float currentTime = CalculateCurrentTime(sequence);
@@ -34,9 +37,10 @@ public class BaseHighScore : IHighScore
 
             // Добавляем заказ в последовательность
             sequence.Add(remainingOrders[bestOrderIndex]);
+            openData.Add(remainingOrders[bestOrderIndex]);
             j++;
         }
-
+        node.OpenData = openData;
         // Возвращаем значение критерия для построенного решения
         return _task.CalculateCriterion((int[])sequence.ToArray());
     }
@@ -57,21 +61,18 @@ public class BaseHighScore : IHighScore
     private float CalculateCurrentTime(List<int> sequence)
     {
         if (sequence.Count == 0) return 0;
-
-        float time = 0;
-
-        // Время выполнения первого заказа
+        int time = 0;
+            //_task.Z(sequence.Last(), sequence.ToArray());
         if (sequence.Count >= 1)
         {
-            time += _task.TransitionMatrix[0, sequence[0] - 1]; // t0x1
+            time += _task.TransitionMatrix[0, sequence[0]]; // t0x1
         }
 
         // Сумма времен выполнения остальных заказов
-        for (int i = 0; i < sequence.Count - 1; i++)
+        for (int i = 1; i < _task.CountOrders - (sequence.Count + j) - 1; i++)
         {
-            time += _task.TransitionMatrix[sequence[i] - 1, sequence[i + 1] - 1];
+            time += _task.TransitionMatrix[i - 1, i];
         }
-
         return time;
     }
 
@@ -90,13 +91,16 @@ public class BaseHighScore : IHighScore
             if (sequence.Count > 0)
             {
                 // Добавляем время от последнего заказа к новому
-                totalTime += _task.TransitionMatrix[sequence[sequence.Count - 1] - 1, order - 1];
+                List<int> ints = new List<int>(sequence);
+                ints.Add(order);
+                //totalTime = _task.Z(order, ints.ToArray());
+                totalTime += _task.TransitionMatrix[sequence[sequence.Count - 1], order];
             }
-            else
-            {
-                // Если последовательность пустая, добавляем время от начального момента
-                totalTime += _task.TransitionMatrix[0, order - 1];
-            }
+            //else
+            //{
+            //    // Если последовательность пустая, добавляем время от начального момента
+            //    totalTime += _task.TransitionMatrix[0, order];
+            //}
 
             // Вычисляем вес
             float weight;
