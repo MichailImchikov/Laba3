@@ -1,4 +1,6 @@
-﻿class BranchBoundMethod
+﻿using System.Diagnostics;
+
+class BranchBoundMethod
 {
     private ABranching _branching;
     private ILowScore _lowScore;
@@ -18,6 +20,7 @@
             BakedData = new List<int>(),
             OpenData = Enumerable.Range(1, data.CountOrders).ToList()
         };
+        _sheetTree.Clear();
         _sheetTree.AddRange(startSheet.GetNextGrop());
         return Run();
     }
@@ -25,8 +28,14 @@
     {
         while(!CheckStopCondition())
         {
+
             _sheetTree = _branching.Branching(_sheetTree);
             Clipping();
+            Console.WriteLine($"Current sheet count: {_sheetTree.Count}");
+            if (_sheetTree.Count == 1)
+            {
+                int j = 0;
+            }
         }
         return CreateNewDataDecision();
     }
