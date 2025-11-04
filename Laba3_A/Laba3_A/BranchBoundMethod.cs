@@ -38,7 +38,7 @@ class BranchBoundMethod
             {
                 if (i == j) continue;
                 var lower = _sheetTree[j].LowScore;
-                if (upper < lower)
+                if (upper <= lower)
                 {
                     _sheetTree.RemoveAt(j);
                     if (j < i) i--; // скорректировать i, если удалили элемент перед ним
