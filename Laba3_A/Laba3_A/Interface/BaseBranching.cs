@@ -1,16 +1,17 @@
 ﻿public class BaseBranching : ABranching
 {
-    protected override SheetTree GetMinScoreNode(List<SheetTree> nodes)
+    protected override SheetTree GetMinScoreNode(HashSet<SheetTree> nodes)
     {
         if (nodes == null || nodes.Count == 0)
-            throw new System.ArgumentException("nodes must be a non-empty list", nameof(nodes));
+            throw new System.ArgumentException("nodes must be a non-empty set", nameof(nodes));
 
-        var minNode = nodes[0];
+        using var enumerator = nodes.GetEnumerator();
+        enumerator.MoveNext();
+        var minNode = enumerator.Current;
         var minScore = minNode.HightScore;
 
-        for (int i = 1; i < nodes.Count; i++)
+        foreach (var currentNode in nodes)
         {
-            var currentNode = nodes[i];
             var currentScore = currentNode.HightScore;
             if (currentScore < minScore)
             {

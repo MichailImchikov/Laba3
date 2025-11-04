@@ -1,15 +1,15 @@
-﻿
-public abstract class ABranching
+﻿public abstract class ABranching
 {
-    public List<SheetTree> Branching(List<SheetTree> nodes)
+    public HashSet<SheetTree> Branching(HashSet<SheetTree> nodes)
     {
         var delSheet = GetMinScoreNode(nodes);
         var childrens = delSheet.GetNextGrop();
-        var buffList = new List<SheetTree>(nodes);
-        buffList.Remove(delSheet);
-        buffList.AddRange(childrens);
-        return buffList;
+        var result = new HashSet<SheetTree>(nodes);
+        result.Remove(delSheet);
+        foreach (var ch in childrens)
+            result.Add(ch);
+        return result;
     }
-    protected abstract SheetTree GetMinScoreNode(List<SheetTree> nodes);
+    protected abstract SheetTree GetMinScoreNode(HashSet<SheetTree> nodes);
 }
 

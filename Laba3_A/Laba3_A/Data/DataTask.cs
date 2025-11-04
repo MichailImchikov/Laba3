@@ -31,7 +31,7 @@ public class DataTask
     public int W(int i, int[] x)// ` штраф за просрочку i -го заказа при порядке x
     {
         int deliveryTime = Z(i, x);
-        return deliveryTime > DirectiveTime[i - 1] ? 1 : 0;
+        return deliveryTime <= DirectiveTime[i - 1] ? 0 : 1;
     }
     public int CalculateCriterion(int[] currentOrder)
     {
