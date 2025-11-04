@@ -11,9 +11,13 @@ namespace Laba3_A
             var High = new BaseHighScore();
             var Branchong = new BaseBranching(High);
             var baseBransfin = new BranchBoundMethod(Branchong, Low, High);
-            var res = baseBransfin.GetDecisionn(dates[0]);
-            Console.WriteLine(string.Join(" ", res.Perest));
-            Console.WriteLine(dates[0].CalculateCriterion(res.Perest.ToArray()));
+            foreach(var task in dates)
+            {
+                var res = baseBransfin.GetDecisionn(task);
+                Console.WriteLine(string.Join(" ", res.Perest));
+                Console.WriteLine(task.CalculateCriterion(res.Perest.ToArray()));
+            }
+
         }
     }
 }

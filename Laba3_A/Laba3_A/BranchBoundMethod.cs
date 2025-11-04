@@ -18,7 +18,7 @@
             BakedData = new List<int>(),
             OpenData = Enumerable.Range(1, data.CountOrders).ToList()
         };
-        _sheetTree.Add(startSheet);
+        _sheetTree.AddRange(startSheet.GetNextGrop());
         return Run();
     }
     private DataDecision Run()
@@ -26,8 +26,26 @@
         while(!CheckStopCondition())
         {
             _sheetTree = _branching.Branching(_sheetTree);
+            Clipping();
         }
         return CreateNewDataDecision();
+    }
+    private void Clipping()
+    {
+        for (int i = 0; i < _sheetTree.Count; i++)
+        {
+            var upper = _highScore.GetScore(_sheetTree[i]);
+            for (int j = _sheetTree.Count - 1; j >= 0; j--)
+            {
+                if (i == j) continue;
+                var lower = _lowScore.GetScore(_sheetTree[j]);
+                if (upper <= lower)
+                {
+                    _sheetTree.RemoveAt(j);
+                    if (j < i) i--; // скорректировать i, если удалили элемент перед ним
+                }
+            }
+        }
     }
     private bool CheckStopCondition()
     {

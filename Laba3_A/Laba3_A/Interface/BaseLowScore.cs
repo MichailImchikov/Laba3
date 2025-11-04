@@ -1,6 +1,4 @@
-﻿
-
-class BaseLowScore : ILowScore
+﻿class BaseLowScore : ILowScore
 {
     public int GetScore(SheetTree node)
     {
