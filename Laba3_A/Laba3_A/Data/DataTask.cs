@@ -31,14 +31,14 @@ public class DataTask
     public int W(int i, int[] x)// ` штраф за просрочку i -го заказа при порядке x
     {
         int deliveryTime = Z(i, x);
-        return deliveryTime > DirectiveTime[i-1] ? 1 : 0;
+        return deliveryTime > DirectiveTime[i - 1] ? 1 : 0;
     }
     public int CalculateCriterion(int[] currentOrder)
     {
         int sum = 0;
         for (int index = 0; index < currentOrder.Length; index++)
         {
-            sum += W(index+1, currentOrder);
+            sum += W(index + 1, currentOrder);
         }
         return sum;
     }

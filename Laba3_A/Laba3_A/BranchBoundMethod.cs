@@ -18,6 +18,7 @@
             BakedData = new List<int>(),
             OpenData = Enumerable.Range(1, data.CountOrders).ToList()
         };
+        _sheetTree.Clear();
         _sheetTree.AddRange(startSheet.GetNextGrop());
         return Run();
     }
