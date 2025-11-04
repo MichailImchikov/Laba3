@@ -3,8 +3,8 @@
 class BranchBoundMethod
 {
     private ABranching _branching;
-    private ILowScore _lowScore;
-    private IHighScore _highScore;
+    static public ILowScore _lowScore;
+    static public IHighScore _highScore;
     private List<SheetTree> _sheetTree = new();
     public BranchBoundMethod(ABranching branching, ILowScore lowScore, IHighScore highScore)
     {
@@ -14,12 +14,7 @@ class BranchBoundMethod
     }
     public DataDecision GetDecisionn(DataTask data)
     {
-        var startSheet = new SheetTree
-        {
-            Data = data,
-            BakedData = new List<int>(),
-            OpenData = Enumerable.Range(1, data.CountOrders).ToList()
-        };
+        var startSheet = new SheetTree(data, new List<int>(), Enumerable.Range(1, data.CountOrders).ToList());
         _sheetTree.Clear();
         _sheetTree.AddRange(startSheet.GetNextGrop());
         return Run();
@@ -31,11 +26,6 @@ class BranchBoundMethod
 
             _sheetTree = _branching.Branching(_sheetTree);
             Clipping();
-            Console.WriteLine($"Current sheet count: {_sheetTree.Count}");
-            if (_sheetTree.Count == 1)
-            {
-                int j = 0;
-            }
         }
         return CreateNewDataDecision();
     }
@@ -43,12 +33,12 @@ class BranchBoundMethod
     {
         for (int i = 0; i < _sheetTree.Count; i++)
         {
-            var upper = _highScore.GetScore(_sheetTree[i]);
+            var upper = _sheetTree[i].HightScore;
             for (int j = _sheetTree.Count - 1; j >= 0; j--)
             {
                 if (i == j) continue;
-                var lower = _lowScore.GetScore(_sheetTree[j]);
-                if (upper <= lower)
+                var lower = _sheetTree[j].LowScore;
+                if (upper < lower)
                 {
                     _sheetTree.RemoveAt(j);
                     if (j < i) i--; // скорректировать i, если удалили элемент перед ним
@@ -58,7 +48,7 @@ class BranchBoundMethod
     }
     private bool CheckStopCondition()
     {
-        if (_sheetTree.Count == 1 && _lowScore.GetScore(_sheetTree[0]) == _highScore.GetScore(_sheetTree[0]))
+        if (_sheetTree.Count == 1 && _sheetTree[0].LowScore == _sheetTree[0].HightScore)
             return true;
         return false;
     }
