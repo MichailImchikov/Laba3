@@ -31,20 +31,35 @@ class BranchBoundMethod
     }
     private void Clipping()
     {
-        for (int i = 0; i < _sheetTree.Count; i++)
+        var up = _sheetTree.Min(t => t.HightScore);
+        int indexMax = _sheetTree.FindIndex(t => t.HightScore == up);
+        List<int> remove = new List<int>();
+        for (int index = 0; index < _sheetTree.Count; index++)
         {
-            var upper = _sheetTree[i].HightScore;
-            for (int j = _sheetTree.Count - 1; j >= 0; j--)
-            {
-                if (i == j) continue;
-                var lower = _sheetTree[j].LowScore;
-                if (upper <= lower)
-                {
-                    _sheetTree.RemoveAt(j);
-                    if (j < i) i--; // скорректировать i, если удалили элемент перед ним
-                }
-            }
+            if (up <= _sheetTree[index].LowScore && indexMax != index) remove.Add(index);
+
         }
+        remove.Sort();
+        remove.Reverse();
+        foreach (int index in remove)
+        {
+            _sheetTree.RemoveAt(index);
+        }
+        //for (int i = 0; i < _sheetTree.Count; i++)
+        //{
+
+        //    var upper = _sheetTree[i].HightScore;
+        //    for (int j = _sheetTree.Count - 1; j >= 0; j--)
+        //    {
+        //        if (i == j) continue;
+        //        var lower = _sheetTree[j].LowScore;
+        //        if (upper <= lower)
+        //        {
+        //            _sheetTree.RemoveAt(j);
+        //            if (j < i) i--; // скорректировать i, если удалили элемент перед ним
+        //        }
+        //    }
+        //}
     }
     private bool CheckStopCondition()
     {

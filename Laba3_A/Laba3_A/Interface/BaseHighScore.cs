@@ -40,7 +40,7 @@ public class BaseHighScore : IHighScore
             openData.Add(remainingOrders[bestOrderIndex]);
             j++;
         }
-        //node.OpenData = openData;
+        node.OpenData = openData;
         // Возвращаем значение критерия для построенного решения
         return _task.CalculateCriterion((int[])sequence.ToArray());
     }
