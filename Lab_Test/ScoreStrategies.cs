@@ -21,7 +21,6 @@ namespace Lab_Test
     {
         public virtual long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
         {
-            // Greedy sequence over current OpenData; also write back the computed order into leaf.OpenData
             var remaining = new HashSet<int>(leaf.OpenData);
             var order = new List<int>(remaining.Count);
 
@@ -45,9 +44,7 @@ namespace Lab_Test
                 }
                 if (minDiffId == -1)
                 {
-                    // No feasible next; the rest will be late. Append them in ascending order for determinism.
                     foreach (var idx in remaining.OrderBy(x => x)) order.Add(idx);
-                    // persist the computed order into OpenData
                     leaf.OpenData.Clear();
                     leaf.OpenData.AddRange(order);
                     return failed + remaining.Count;
@@ -57,7 +54,6 @@ namespace Lab_Test
                 remaining.Remove(minDiffId);
                 lastVertId = minDiffId;
             }
-            // persist the computed order into OpenData
             leaf.OpenData.Clear();
             leaf.OpenData.AddRange(order);
             return failed;

@@ -59,7 +59,6 @@ namespace Lab_Test
             leaf.T = leaf.T + _times[leaf.BakedData[^1]][a];
             leaf.BakedData.Add(a);
             if (leaf.T > _directiveTimes[a]) leaf.Failed++;
-            // keep OpenData in sync
             if (leaf.OpenData.Count > 0)
             {
                 var idx = leaf.OpenData.IndexOf(a);
@@ -78,7 +77,6 @@ namespace Lab_Test
                 T = 0,
                 Failed = 0
             };
-            // initialize OpenData as indices except 0
             root.OpenData = Enumerable.Range(0, _n).Where(i => i != 0).ToList();
             root.H = _lowScore.ComputeH(root, _times, _directiveTimes);
             root.B = _highScore.ComputeB(root, _times, _directiveTimes);
@@ -88,7 +86,6 @@ namespace Lab_Test
             {
                 int leafId = _branching.Branch(leaves);
                 var leaf = leaves[leafId];
-                // branch only over currently open vertices
                 var candidates = leaf.OpenData.ToList();
                 foreach (var a in candidates)
                 {

@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 
 namespace Lab_Test
 {
-
     internal static class DataTaskLoader
     {
         public static List<DataTask> LoadAll()
@@ -16,15 +11,10 @@ namespace Lab_Test
             if (task3 == null) return result;
             foreach (var file in GetDataFilesFromTask3(task3))
             {
-                try
-                {
-                    LoadSingle(file, out var times, out var directiveTimes);
-                    result.Add(new DataTask(times, directiveTimes, file));
-                }
-                catch
-                {
-                    // skip invalid files
-                }
+
+                LoadSingle(file, out var times, out var directiveTimes);
+                result.Add(new DataTask(times, directiveTimes, file));
+
             }
             return result;
         }
