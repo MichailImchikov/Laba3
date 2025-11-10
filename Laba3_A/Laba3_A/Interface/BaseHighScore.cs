@@ -1,8 +1,9 @@
 ﻿
+using System.ComponentModel.Design;
+
 public class BaseHighScore : IHighScore
 {
     DataTask _task;
-    int j;
     public float GetScore(SheetTree node)
     {
         _task = node.Data;
@@ -20,14 +21,13 @@ public class BaseHighScore : IHighScore
         List<int> sequence = new List<int>(currentSequence);
 
         // Шаг 1: Инициализация
-        int j = 0;
 
         // Шаг 2: Жадное добавление заказов
-        List<int> remainingOrders = new List<int>();
+        List<int> remainingOrders = GetRemainingOrders(sequence);
         while (sequence.Count < _task.CountOrders)
         {
             // Получаем оставшиеся заказы
-             remainingOrders = GetRemainingOrders(sequence);
+             
 
             // Вычисляем текущее время выполнения до момента добавления нового заказа
             float currentTime = CalculateCurrentTime(sequence);
@@ -38,9 +38,9 @@ public class BaseHighScore : IHighScore
             // Добавляем заказ в последовательность
             sequence.Add(remainingOrders[bestOrderIndex]);
             openData.Add(remainingOrders[bestOrderIndex]);
-            j++;
+            remainingOrders.RemoveAt(bestOrderIndex);
         }
-        node.OpenData = openData;
+        //node.OpenData = openData;
         // Возвращаем значение критерия для построенного решения
         return _task.CalculateCriterion((int[])sequence.ToArray());
     }
@@ -63,15 +63,14 @@ public class BaseHighScore : IHighScore
         if (sequence.Count == 0) return 0;
         int time = 0;
             //_task.Z(sequence.Last(), sequence.ToArray());
-        if (sequence.Count >= 1)
-        {
-            time += _task.TransitionMatrix[0, sequence[0]]; // t0x1
-        }
+
+        time += _task.TransitionMatrix[0, sequence[0]]; // t0x1
+        
 
         // Сумма времен выполнения остальных заказов
-        for (int i = 1; i < _task.CountOrders - (sequence.Count + j) - 1; i++)
+        for (int i = 0; i < sequence.Count - 1; i++)
         {
-            time += _task.TransitionMatrix[i - 1, i];
+            time += _task.TransitionMatrix[sequence[i], sequence[i + 1]];
         }
         return time;
     }

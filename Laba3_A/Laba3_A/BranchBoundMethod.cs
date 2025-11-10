@@ -63,7 +63,7 @@ class BranchBoundMethod
     }
     private bool CheckStopCondition()
     {
-        if (_sheetTree.Count == 1 && _sheetTree[0].LowScore == _sheetTree[0].HightScore)
+        if (_sheetTree.Count == 1 && _sheetTree[0].LowScore == _sheetTree[0].HightScore  && _sheetTree[0].OpenData.Count <= 1)
             return true;
         return false;
     }
