@@ -14,6 +14,7 @@ class BranchBoundMethod
     }
     public DataDecision GetDecisionn(DataTask data)
     {
+        SheetTree.CreatedLeafCount = 0; // сброс счетчика перед задачей
         var startSheet = new SheetTree(data, new List<int>(), Enumerable.Range(1, data.CountOrders).ToList());
         _sheetTree.Clear();
         _sheetTree.AddRange(startSheet.GetNextGrop());
@@ -45,21 +46,6 @@ class BranchBoundMethod
         {
             _sheetTree.RemoveAt(index);
         }
-        //for (int i = 0; i < _sheetTree.Count; i++)
-        //{
-
-        //    var upper = _sheetTree[i].HightScore;
-        //    for (int j = _sheetTree.Count - 1; j >= 0; j--)
-        //    {
-        //        if (i == j) continue;
-        //        var lower = _sheetTree[j].LowScore;
-        //        if (upper <= lower)
-        //        {
-        //            _sheetTree.RemoveAt(j);
-        //            if (j < i) i--; // скорректировать i, если удалили элемент перед ним
-        //        }
-        //    }
-        //}
     }
     private bool CheckStopCondition()
     {
@@ -73,7 +59,8 @@ class BranchBoundMethod
         buffList.AddRange(_sheetTree[0].OpenData);
         return new DataDecision
         {
-            Perest = buffList
+            Perest = buffList,
+            CountLeaf = SheetTree.CreatedLeafCount // сохранение количества листьев
         };
     }
 }

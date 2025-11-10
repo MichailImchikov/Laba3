@@ -2,7 +2,6 @@
 public class BaseHighScore : IHighScore
 {
     DataTask _task;
-    int j;
     public float GetScore(SheetTree node)
     {
         _task = node.Data;
@@ -69,7 +68,7 @@ public class BaseHighScore : IHighScore
         }
 
         // Сумма времен выполнения остальных заказов
-        for (int i = 1; i < _task.CountOrders - (sequence.Count + j) - 1; i++)
+        for (int i = 1; i < _task.CountOrders - (sequence.Count ) - 1; i++)
         {
             time += _task.TransitionMatrix[i - 1, i];
         }

@@ -1,6 +1,6 @@
-﻿
-public class SheetTree
+﻿public class SheetTree
 {
+    public static int CreatedLeafCount = 0; 
     public DataTask Data;
     public List<int> BakedData;
     public List<int> OpenData;
@@ -13,6 +13,7 @@ public class SheetTree
         OpenData = openData;
         LowScore = BranchBoundMethod._lowScore.GetScore(this);
         HightScore = BranchBoundMethod._highScore.GetScore(this);
+        CreatedLeafCount++; 
     }
     public List<SheetTree> GetNextGrop()
     {
