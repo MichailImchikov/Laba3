@@ -9,8 +9,8 @@ namespace Laba3_A
         {
             var dates = DataTaskReader.LoadAll();
             var Low = new BaseLowScore();
-            var High = new BaseHighScore();
-            var Branchong = new BaseBranching();
+            var High = new SmartHighScore();
+            var Branchong = new AdaptiveBranching();
             var baseBransfin = new BranchBoundMethod(Branchong, Low, High);
             int i = 0;
             foreach (var task in dates)

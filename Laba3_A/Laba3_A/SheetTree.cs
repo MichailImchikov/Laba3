@@ -11,6 +11,11 @@
         Data = data;
         BakedData = bakedData;
         OpenData = openData;
+        if (OpenData.Count == 1)
+        {
+            bakedData.Add(OpenData[0]);
+            OpenData.Clear();
+        }
         LowScore = BranchBoundMethod._lowScore.GetScore(this);
         HightScore = BranchBoundMethod._highScore.GetScore(this);
         CreatedLeafCount++; 
