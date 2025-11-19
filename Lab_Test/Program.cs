@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
 
 namespace Lab_Test
 {
@@ -12,23 +11,15 @@ namespace Lab_Test
         {
             var tasks = DataTaskLoader.LoadAll();
             if (tasks.Count == 0) return;
-            int i = 0;
+
             foreach (var task in tasks)
             {
-                var branching = new AdaptiveBranching(task.Times, task.DirectiveTimes);// new BaseBranching();
-                var solver = new BaseSolver(task.Times, task.DirectiveTimes, new BaseHighScore(), new BaseLowScore(), branching);
-                var sw = Stopwatch.StartNew();
-                var result = solver.BranchAndBound(out var leavesTraversed);
-                sw.Stop();
-                Console.WriteLine($"____TASK{++i}____");
+                var baseSolver = new BaseSolver(task.Times, task.DirectiveTimes, new BaseHighScore(), new BaseLowScore(), new BaseBranching());
+                var result = baseSolver.BranchAndBound(out _);
+                //var solver = new BaseSolver(task.Times, task.DirectiveTimes, new HighScore(), new LowScore(), new Branching());
+
                 var perm = result.BakedData.Where(v => v != 0);
-                Console.WriteLine(string.Join(" ", perm));
-                Console.WriteLine("Критерий: " + result.H);
-                int depth = Math.Max(0, result.BakedData.Count - 1);
-                Console.WriteLine("Глубина: " + depth);
-                Console.WriteLine("Просмотрено вершин: " + leavesTraversed);
-                Console.WriteLine("Время: " + sw.ElapsedMilliseconds + " ms");
-                Console.WriteLine();
+                Console.WriteLine(string.Join(" ", perm) + " " + result.H);
             }
         }
     }
