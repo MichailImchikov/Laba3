@@ -28,7 +28,7 @@ namespace Lab_Test
     {
         public int Branch(IReadOnlyList<Leaf> leaves)
         {
-            long min = long.MaxValue;
+            long min = leaves[0].OpenData.Count + leaves[0].BakedData.Count;
             int minBId = -1;
             for (int i = 0; i < leaves.Count; i++)
             {

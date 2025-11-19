@@ -80,9 +80,21 @@ namespace Lab_Test
         {
             long output = leaf.Failed;
             int last = leaf.BakedData[^1];
+            bool flag = false;
             foreach (var a in leaf.OpenData)
             {
-                if (leaf.T + times[last][a] > directiveTimes[a]) output++;
+                if (times[last][a] > times[0][a] && !flag)
+                {
+                    flag = true;
+                }
+                if (/*times[last][a] > times[0][a]*/ flag)
+                {
+                    if (leaf.T + times[last][0] + times[0][a] > directiveTimes[a]) output++;
+                }
+                else
+                {
+                    if (leaf.T + times[last][a] > directiveTimes[a]) output++;
+                }
             }
             return output;
         }
