@@ -15,7 +15,7 @@ namespace Lab_Test
             int i = 0;
             foreach (var task in tasks)
             {
-                var branching = new AdaptiveBranching(task.Times, task.DirectiveTimes);// new BaseBranching();
+                var branching = /*new AdaptiveBranching(task.Times, task.DirectiveTimes);*/ new Branching()/* new BaseBranching()*/;
                 var solver = new BaseSolver(task.Times, task.DirectiveTimes, new BaseHighScore(), new BaseLowScore(), branching);
                 var sw = Stopwatch.StartNew();
                 var result = solver.BranchAndBound(out var leavesTraversed);
