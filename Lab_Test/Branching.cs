@@ -27,4 +27,22 @@ namespace Lab_Test
             return minBId;
         }
     }
+    internal class Branching : IBranching
+    {
+        public int Branch(IReadOnlyList<Leaf> leaves)
+        {
+            long min = long.MaxValue;
+            int minBId = -1;
+            for (int i = 0; i < leaves.Count; i++)
+            {
+                // Expandable if we still have open vertices to choose
+                if (leaves[i].OpenData.Count > 0 && leaves[i].B - leaves[i].H < min)
+                {
+                    min = leaves[i].B - leaves[i].H;
+                    minBId = i;
+                }
+            }
+            return minBId;
+        }
+    }
 }
