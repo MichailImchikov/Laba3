@@ -21,6 +21,7 @@ namespace Lab_Test
                 var result = solver.BranchAndBound(out var leavesTraversed);
                 sw.Stop();
                 Console.WriteLine($"____TASK{++i}____");
+
                 var perm = result.BakedData.Where(v => v != 0);
                 Console.WriteLine(string.Join(" ", perm));
                 Console.WriteLine("Критерий: " + result.H);
