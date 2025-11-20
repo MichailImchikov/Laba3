@@ -44,32 +44,41 @@ namespace Lab_Test
         }
     }
 
-    // ќптимизированна€ стратеги€: минимальное H (best-first search по нижней границе)
-    // ¬ыбирает самый перспективный лист с точки зрени€ оптимистичной оценки
-    // ѕри равном H предпочитает лист с минимальным B дл€ стабильности
+    // ”лучшенный выбор ветвлени€:
+    // 1) минимальный H (самый перспективный по нижней границе),
+    // 2) при равенстве Ч минимальный (B - H) как оценка ширины зазора,
+    // 3) затем минимальный B,
+    // 4) затем меньшее количество открытых вершин (агрессивнее раскрывает узел).
     internal class OptimizedBranching : IBranching
     {
         public int Branch(IReadOnlyList<Leaf> leaves)
         {
-            long minH = long.MaxValue;
-            long minB = long.MaxValue;
+            long bestH = long.MaxValue;
+            long bestGap = long.MaxValue;
+            long bestB = long.MaxValue;
+            int bestOpen = int.MaxValue;
             int bestId = -1;
             
             for (int i = 0; i < leaves.Count; i++)
             {
-                if (leaves[i].OpenData.Count > 0)
+                var leaf = leaves[i];
+                if (leaf.OpenData.Count == 0) continue;
+
+                long h = leaf.H;
+                long b = leaf.B;
+                long gap = b - h;
+                int open = leaf.OpenData.Count;
+
+                if (h < bestH ||
+                    (h == bestH && gap < bestGap) ||
+                    (h == bestH && gap == bestGap && b < bestB) ||
+                    (h == bestH && gap == bestGap && b == bestB && open < bestOpen))
                 {
-                    long h = leaves[i].H;
-                    long b = leaves[i].B;
-                    
-                    // ¬ыбираем лист с минимальным H (лучший случай)
-                    // ѕри равном H предпочитаем лист с минимальным B
-                    if (h < minH || (h == minH && b < minB))
-                    {
-                        minH = h;
-                        minB = b;
-                        bestId = i;
-                    }
+                    bestH = h;
+                    bestGap = gap;
+                    bestB = b;
+                    bestOpen = open;
+                    bestId = i;
                 }
             }
             

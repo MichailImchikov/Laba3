@@ -75,8 +75,11 @@ namespace Lab_Test
         
     }
 
-    // Оптимизированная версия использует ТУ ЖЕ логику, что и базовая
-    // Разница только в порядке перебора для потенциально лучшего кэширования
+    // Оптимизированная версия использует более сильную верхнюю границу:
+    // 1) Сначала пытается добавлять только «своевременные» вершины по минимальному резерву (как базовая)
+    // 2) Если своевременных нет, выбирает вершину с минимальной просрочкой и продолжает построение маршрута,
+    //    поскольку это может «разблокировать» другие вершины и уменьшить итоговое число опоздавших.
+    // Это дает более плотную верхнюю границу (<= базовой), что улучшает отсечения.
     internal class OptimizedHighScore : IHighScore
     {
         public long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
@@ -85,60 +88,90 @@ namespace Lab_Test
             var order = new List<int>(remaining.Count);
 
             long t = leaf.T;
-            int lastVertId = leaf.BakedData[^1];
+            int last = leaf.BakedData[^1];
             int failed = leaf.Failed;
-            
+
             while (remaining.Count > 0)
             {
-                long minDiff = long.MaxValue;
-                int minDiffId = -1;
-                
-                // Используем ту же логику что и базовая версия
-                foreach (var index in remaining)
+                // 1) Пытаемся найти своевременную вершину с минимальным резервом
+                long bestSlack = long.MaxValue;
+                int bestOnTime = -1;
+                foreach (var v in remaining)
                 {
-                    long timeAfter = t + times[lastVertId][index];
-                    if (timeAfter > directiveTimes[index]) continue;
-                    long diff = directiveTimes[index] - timeAfter;
-                    if (diff < minDiff)
+                    long timeAfter = t + times[last][v];
+                    if (timeAfter <= directiveTimes[v])
                     {
-                        minDiff = diff;
-                        minDiffId = index;
+                        long slack = directiveTimes[v] - timeAfter;
+                        if (slack < bestSlack)
+                        {
+                            bestSlack = slack;
+                            bestOnTime = v;
+                        }
                     }
                 }
-                
-                if (minDiffId == -1)
+
+                int chosen;
+                long arriveTime;
+                bool isLate;
+
+                if (bestOnTime != -1)
                 {
-                    foreach (var idx in remaining.OrderBy(x => x)) 
-                        order.Add(idx);
-                    leaf.OpenData.Clear();
-                    leaf.OpenData.AddRange(order);
-                    return failed + remaining.Count;
+                    chosen = bestOnTime;
+                    arriveTime = t + times[last][chosen];
+                    isLate = false;
                 }
-                
-                order.Add(minDiffId);
-                t += times[lastVertId][minDiffId];
-                remaining.Remove(minDiffId);
-                lastVertId = minDiffId;
+                else
+                {
+                    // 2) Своевременных кандидатов нет — выбираем с минимальной просрочкой
+                    long minTardiness = long.MaxValue;
+                    int bestLate = -1;
+                    foreach (var v in remaining)
+                    {
+                        long timeAfter = t + times[last][v];
+                        long tardiness = timeAfter - directiveTimes[v]; // > 0
+                        if (tardiness < minTardiness)
+                        {
+                            minTardiness = tardiness;
+                            bestLate = v;
+                        }
+                    }
+
+                    chosen = bestLate;
+                    arriveTime = t + times[last][chosen];
+                    isLate = arriveTime > directiveTimes[chosen];
+                }
+
+                // Обновляем маршрут и метрики
+                order.Add(chosen);
+                if (isLate) failed++;
+                t = arriveTime;
+                last = chosen;
+                remaining.Remove(chosen);
             }
-            
+
             leaf.OpenData.Clear();
             leaf.OpenData.AddRange(order);
             return failed;
         }
     }
 
-    // Оптимизированная версия использует ТУ ЖЕ логику, что и базовая
+    // Оптимизированная версия для нижней границы: оставляем??ную и быструю оценку,
+    // которая считается для каждого оставшегося узла относительно последнего посещённого.
     internal class OptimizedLowScore : ILowScore
     {
         public long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes)
         {
-            // Полностью идентичная логика базовой версии
             long output = leaf.Failed;
             int last = leaf.BakedData[^1];
+
             foreach (var a in leaf.OpenData)
             {
-                if (leaf.T + times[last][a] > directiveTimes[a]) output++;
+                if (leaf.T + times[last][a] > directiveTimes[a])
+                {
+                    output++;
+                }
             }
+
             return output;
         }
     }
