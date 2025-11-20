@@ -10,12 +10,12 @@ namespace Lab_Test
     {
         public List<List<long>> Times { get; }
         public List<long> DirectiveTimes { get; }
-        public string SourcePath { get; }
+        public string Path { get; }
         public DataTask(List<List<long>> times, List<long> directiveTimes, string sourcePath)
         {
             Times = times;
             DirectiveTimes = directiveTimes;
-            SourcePath = sourcePath;
+            Path = sourcePath;
         }
     }
 }

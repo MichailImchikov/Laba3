@@ -11,7 +11,7 @@ namespace Lab_Test
     {
         public int Branch(IReadOnlyList<Leaf> leaves)
         {
-            long minB = long.MaxValue;
+            long minB = leaves[0].OpenData.Count + leaves[0].BakedData.Count;
             int minBId = -1;
             for (int i = 0; i < leaves.Count; i++)
             {
@@ -30,9 +30,9 @@ namespace Lab_Test
         {
             long min = leaves[0].OpenData.Count + leaves[0].BakedData.Count;
             int minBId = -1;
+
             for (int i = 0; i < leaves.Count; i++)
             {
-                // Expandable if we still have open vertices to choose
                 if (leaves[i].OpenData.Count > 0 && leaves[i].B - leaves[i].H < min)
                 {
                     min = leaves[i].B - leaves[i].H;

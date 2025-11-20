@@ -12,7 +12,7 @@ namespace Lab_Test
         public List<int> OpenData { get; set; } = new();
         public List<int> BakedData { get; set; } = new();
 
-        public long T { get; set; }
+        public long CurrentTime { get; set; }
         public int Failed { get; set; }
         public long B { get; set; }
         public long H { get; set; }
@@ -24,7 +24,7 @@ namespace Lab_Test
             {
                 OpenData = new List<int>(OpenData),
                 BakedData = new List<int>(BakedData),
-                T = this.T,
+                CurrentTime = this.CurrentTime,
                 Failed = this.Failed,
                 B = this.B,
                 H = this.H
@@ -36,29 +36,35 @@ namespace Lab_Test
     {
         private readonly Times _times;
         private readonly DirectiveTimes _directiveTimes;
-        private readonly int _n; // n+1 of original logic
+        private readonly int _n;
         private readonly IHighScore _highScore;
         private readonly ILowScore _lowScore;
         private readonly IBranching _branching;
 
         public BaseSolver(Times times, DirectiveTimes directiveTimes, IHighScore highScore, ILowScore lowScore, IBranching branching)
         {
-            _times = times ?? throw new ArgumentNullException(nameof(times));
-            _directiveTimes = directiveTimes ?? throw new ArgumentNullException(nameof(directiveTimes));
-            _highScore = highScore ?? throw new ArgumentNullException(nameof(highScore));
-            _lowScore = lowScore ?? throw new ArgumentNullException(nameof(lowScore));
-            _branching = branching ?? throw new ArgumentNullException(nameof(branching));
-            _n = times.Count; // contains start vertex
-            if (_directiveTimes.Count != _n) throw new ArgumentException("directiveTimes size mismatch times");
-            if (_times.Count == 0 || _times[0].Count != _n) throw new ArgumentException("times row size mismatch n");
-            if (_directiveTimes[0] != 0) throw new ArgumentException("directive_times[0] must be 0");
+            //_times = times ?? throw new ArgumentNullException(nameof(times));
+            //_directiveTimes = directiveTimes ?? throw new ArgumentNullException(nameof(directiveTimes));
+            //_highScore = highScore ?? throw new ArgumentNullException(nameof(highScore));
+            //_lowScore = lowScore ?? throw new ArgumentNullException(nameof(lowScore));
+            //_branching = branching ?? throw new ArgumentNullException(nameof(branching));
+            //_n = times.Count; // contains start vertex
+            //if (_directiveTimes.Count != _n) throw new ArgumentException("directiveTimes size mismatch times");
+            //if (_times.Count == 0 || _times[0].Count != _n) throw new ArgumentException("times row size mismatch n");
+            //if (_directiveTimes[0] != 0) throw new ArgumentException("directive_times[0] must be 0");
+            _times = times;
+            _directiveTimes = directiveTimes;
+            _highScore = highScore;
+            _lowScore = lowScore;
+            _branching = branching;
+            _n = times.Count;
         }
 
         private Leaf UpdateLeaf(Leaf leaf, int a)
         {
-            leaf.T = leaf.T + _times[leaf.BakedData[^1]][a];
+            leaf.CurrentTime = leaf.CurrentTime + _times[leaf.BakedData[^1]][a];
             leaf.BakedData.Add(a);
-            if (leaf.T > _directiveTimes[a]) leaf.Failed++;
+            if (leaf.CurrentTime > _directiveTimes[a]) leaf.Failed++;
             if (leaf.OpenData.Count > 0)
             {
                 var idx = leaf.OpenData.IndexOf(a);
@@ -74,7 +80,7 @@ namespace Lab_Test
             var root = new Leaf
             {
                 BakedData = new List<int> { 0 },
-                T = 0,
+                CurrentTime = 0,
                 Failed = 0
             };
             root.OpenData = Enumerable.Range(0, _n).Where(i => i != 0).ToList();
@@ -115,7 +121,6 @@ namespace Lab_Test
                         i--;
                     }
                 }
-
                 if (leaves.Count == 1 && leaves[0].B == leaves[0].H)
                 {
                     var leafFinal = leaves[0];

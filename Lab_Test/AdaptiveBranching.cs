@@ -48,7 +48,7 @@ namespace Lab_Test
                 int safeCount = 0;
                 foreach (var v in node.OpenData)
                 {
-                    long timeAfter = node.T + _times[lastVert][v];
+                    long timeAfter = node.CurrentTime + _times[lastVert][v];
                     if (timeAfter <= _directiveTimes[v]) safeCount++; // םו המבאגטע רענאפ
                 }
                 int branchFactor = node.OpenData.Count;
