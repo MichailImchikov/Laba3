@@ -17,7 +17,6 @@ namespace Lab_Test
         public long B { get; set; }
         public long H { get; set; }
 
-        // ¬озвращает глубокую копию текущего листа
         public Leaf Copy()
         {
             return new Leaf
@@ -43,15 +42,6 @@ namespace Lab_Test
 
         public BaseSolver(Times times, DirectiveTimes directiveTimes, IHighScore highScore, ILowScore lowScore, IBranching branching)
         {
-            //_times = times ?? throw new ArgumentNullException(nameof(times));
-            //_directiveTimes = directiveTimes ?? throw new ArgumentNullException(nameof(directiveTimes));
-            //_highScore = highScore ?? throw new ArgumentNullException(nameof(highScore));
-            //_lowScore = lowScore ?? throw new ArgumentNullException(nameof(lowScore));
-            //_branching = branching ?? throw new ArgumentNullException(nameof(branching));
-            //_n = times.Count; // contains start vertex
-            //if (_directiveTimes.Count != _n) throw new ArgumentException("directiveTimes size mismatch times");
-            //if (_times.Count == 0 || _times[0].Count != _n) throw new ArgumentException("times row size mismatch n");
-            //if (_directiveTimes[0] != 0) throw new ArgumentException("directive_times[0] must be 0");
             _times = times;
             _directiveTimes = directiveTimes;
             _highScore = highScore;

@@ -28,14 +28,15 @@ namespace Lab_Test
     {
         public int Branch(IReadOnlyList<Leaf> leaves)
         {
-            long min = leaves[0].OpenData.Count + leaves[0].BakedData.Count;
+            long bestScore = long.MaxValue;
             int minBId = -1;
-
             for (int i = 0; i < leaves.Count; i++)
             {
-                if (leaves[i].OpenData.Count > 0 && leaves[i].B - leaves[i].H < min)
+                if (leaves[i].OpenData.Count == 0) continue;
+                long score = leaves[i].B * 1000 + leaves[i].OpenData.Count;
+                if (score < bestScore)
                 {
-                    min = leaves[i].B - leaves[i].H;
+                    bestScore = score;
                     minBId = i;
                 }
             }

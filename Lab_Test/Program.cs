@@ -22,7 +22,7 @@ namespace Lab_Test
                 var sw = Stopwatch.StartNew();
                 var result = baseSolver.BranchAndBound(out var leavesTraversedBase);
                 sw.Stop();
-                Console.WriteLine($"____TASK{++i}____");
+                Console.WriteLine($"Задача: {++i}");
 
                 var perm = result.BakedData.Where(v => v != 0);
                 Console.WriteLine(string.Join(" ", perm));
