@@ -1,32 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 namespace Lab_Test
 {
     using Times = List<List<long>>;
     using DirectiveTimes = List<long>;
 
-    internal interface IHighScore
+    public interface IHighScore
     {
-        long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes);
+        long GetScoreB(Node node, Times times, DirectiveTimes directiveTimes);
     }
 
-    internal interface ILowScore
+    public interface ILowScore
     {
-        long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes);
+        long GetScoreH(Node node, Times times, DirectiveTimes directiveTimes);
+    }
+    public interface IBranching
+    {
+        int Branch(IReadOnlyList<Node> leaves);
     }
 
-    internal class BaseHighScore : IHighScore
+    public class BaseHighScore : IHighScore
     {
-        public virtual long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        public virtual long GetScoreB(Node node, Times times, DirectiveTimes directiveTimes)
         {
-            var remaining = new HashSet<int>(leaf.OpenData);
+            var remaining = new HashSet<int>(node.FreeOrder);
             var order = new List<int>(remaining.Count);
 
-            long t = leaf.T;
-            int lastVertId = leaf.BakedData[^1];
-            int failed = leaf.Failed;
+            long t = node.T;
+            int lastVertId = node.CloseOrder[^1];
+            int failed = node.Failed;
             while (remaining.Count > 0)
             {
                 long minDiff = long.MaxValue;
@@ -45,8 +46,8 @@ namespace Lab_Test
                 if (minDiffId == -1)
                 {
                     foreach (var idx in remaining.OrderBy(x => x)) order.Add(idx);
-                    leaf.OpenData.Clear();
-                    leaf.OpenData.AddRange(order);
+                    node.FreeOrder.Clear();
+                    node.FreeOrder.AddRange(order);
                     return failed + remaining.Count;
                 }
                 order.Add(minDiffId);
@@ -54,129 +55,118 @@ namespace Lab_Test
                 remaining.Remove(minDiffId);
                 lastVertId = minDiffId;
             }
-            leaf.OpenData.Clear();
-            leaf.OpenData.AddRange(order);
+            node.FreeOrder.Clear();
+            node.FreeOrder.AddRange(order);
             return failed;
         }
     }
 
-    internal class BaseLowScore : ILowScore
+    public class BaseLowScore : ILowScore
     {
-        public virtual long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        public virtual long GetScoreH(Node node, Times times, DirectiveTimes directiveTimes)
         {
-            long output = leaf.Failed;
-            int last = leaf.BakedData[^1];
-            foreach (var a in leaf.OpenData)
+            long output = node.Failed;
+            int last = node.CloseOrder[^1];
+            foreach (var a in node.FreeOrder)
             {
-                if (leaf.T + times[last][a] > directiveTimes[a]) output++;
+                if (node.T + times[last][a] > directiveTimes[a]) output++;
             }
             return output;
         }
 
     }
-
-    // Оптимизированная версия использует более сильную верхнюю границу:
-    // 1) Сначала пытается добавлять только «своевременные» вершины по минимальному резерву (как базовая)
-    // 2) Если своевременных нет, выбирает вершину с минимальной просрочкой и продолжает построение маршрута,
-    //    поскольку это может «разблокировать» другие вершины и уменьшить итоговое число опоздавших.
-    // Это дает более плотную верхнюю границу (<= базовой), что улучшает отсечения.
-    internal class OptimizedHighScore : IHighScore
+    public class OptimizedHighScore : IHighScore
     {
-        public long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        public virtual long GetScoreB(Node node, Times times, DirectiveTimes directiveTimes)
         {
-            var remaining = new HashSet<int>(leaf.OpenData);
-            var order = new List<int>(remaining.Count);
-
-            long t = leaf.T;
-            int last = leaf.BakedData[^1];
-            int failed = leaf.Failed;
+            var remaining = new List<int>(node.FreeOrder);
+            long t = node.T;
+            int last = node.CloseOrder[^1];
+            int failed = node.Failed;
 
             while (remaining.Count > 0)
             {
-                // 1) Пытаемся найти своевременную вершину с минимальным резервом
-                long bestSlack = long.MaxValue;
-                int bestOnTime = -1;
-                foreach (var v in remaining)
-                {
-                    long timeAfter = t + times[last][v];
-                    if (timeAfter <= directiveTimes[v])
-                    {
-                        long slack = directiveTimes[v] - timeAfter;
-                        if (slack < bestSlack)
-                        {
-                            bestSlack = slack;
-                            bestOnTime = v;
-                        }
-                    }
-                }
+                int bestId = -1;
+                int maxFeasibleAfter = -1;  
+                long minSlack = long.MaxValue;
+                long minDist = long.MaxValue;
 
-                int chosen;
-                long arriveTime;
-                bool isLate;
+                foreach (int i in remaining)
+                {
+                    long arrival = t + times[last][i];
+                    if (arrival > directiveTimes[i]) continue; 
 
-                if (bestOnTime != -1)
-                {
-                    chosen = bestOnTime;
-                    arriveTime = t + times[last][chosen];
-                    isLate = false;
-                }
-                else
-                {
-                    // 2) Своевременных кандидатов нет — выбираем с минимальной просрочкой
-                    long minTardiness = long.MaxValue;
-                    int bestLate = -1;
-                    foreach (var v in remaining)
+                    long newTime = arrival;
+                    int feasibleAfter = 0;
+                    int checkedCount = 0;
+                    int maxCheck = Math.Min(remaining.Count - 1, 5);
+
+                    foreach (int j in remaining)
                     {
-                        long timeAfter = t + times[last][v];
-                        long tardiness = timeAfter - directiveTimes[v]; // > 0
-                        if (tardiness < minTardiness)
-                        {
-                            minTardiness = tardiness;
-                            bestLate = v;
-                        }
+                        if (j == i) continue;
+                        if (++checkedCount > maxCheck) break;
+                        if (newTime + times[i][j] <= directiveTimes[j])
+                            feasibleAfter++;
                     }
 
-                    chosen = bestLate;
-                    arriveTime = t + times[last][chosen];
-                    isLate = arriveTime > directiveTimes[chosen];
+                    long slack = directiveTimes[i] - arrival;
+
+                    bool isBetter = feasibleAfter > maxFeasibleAfter ||
+                                   (feasibleAfter == maxFeasibleAfter && slack < minSlack) ||
+                                   (feasibleAfter == maxFeasibleAfter && slack == minSlack && times[last][i] < minDist);
+
+                    if (isBetter)
+                    {
+                        maxFeasibleAfter = feasibleAfter;
+                        minSlack = slack;
+                        minDist = times[last][i];
+                        bestId = i;
+                    }
+                }
+                if (bestId == -1)
+                {
+                    long minLateness = long.MaxValue;
+                    long minDistForLate = long.MaxValue;
+
+                    foreach (int i in remaining)
+                    {
+                        long arrival = t + times[last][i];
+                        long lateness = arrival - directiveTimes[i]; 
+
+                        bool isBetter = lateness < minLateness ||
+                                       (lateness == minLateness && times[last][i] < minDistForLate);
+
+                        if (isBetter)
+                        {
+                            minLateness = lateness;
+                            minDistForLate = times[last][i];
+                            bestId = i;
+                        }
+                    }
+                    failed++; 
                 }
 
-                // Обновляем маршрут и метрики
-                order.Add(chosen);
-                if (isLate) failed++;
-                t = arriveTime;
-                last = chosen;
-                remaining.Remove(chosen);
+                t += times[last][bestId];
+                remaining.Remove(bestId);
+                last = bestId;
             }
 
-            leaf.OpenData.Clear();
-            leaf.OpenData.AddRange(order);
             return failed;
         }
     }
 
-    // Логически усиленная нижняя граница:
-    // 1) Считаем "немедленно поздние" вершины (как в BaseLowScore).
-    // 2) Среди оставшихся ищем непересекающиеся пары (u,v), которые НЕ могут быть обе своевременными:
-    //       T + time[last][u] + time[u][v] > D[v]  И
-    //       T + time[last][v] + time[v][u] > D[u]
-    //    Если оба направления дают опоздание второй вершины, то в любой последовательности
-    //    хотя бы одна из (u,v) обязательно будет опоздала. Для набора непересекающихся пар
-    //    это добавляет столько же обязательных опозданий.
-    // Это усиливает нижнюю границу без риска завышения (корректно для отсечения).
-    internal class OptimizedLowScore : ILowScore
+    public class OptimizedLowScore : ILowScore
     {
-        public long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        public long GetScoreH(Node node, Times times, DirectiveTimes directiveTimes)
         {
-            long mandatoryLate = leaf.Failed;
-            int last = leaf.BakedData[^1];
-            long t0 = leaf.T;
-            var open = leaf.OpenData;
+            long mandatoryLate = node.Failed;
+            int last = node.CloseOrder[^1];
+            long t0 = node.T;
+            var open = node.FreeOrder;
 
             if (open.Count == 0)
                 return mandatoryLate;
 
-            // 1) Немедленно поздние
             var candidates = new List<int>(open.Count);
             foreach (var v in open)
             {
@@ -187,12 +177,10 @@ namespace Lab_Test
                 }
                 else
                 {
-                    candidates.Add(v); // потенциально своевременные
+                    candidates.Add(v); 
                 }
             }
 
-            // 2) Поиск непересекающихся конфликтных пар
-            //    Жадный подбор пар (matching): каждая добавляет +1 к гарантированным опозданиям.
             int m = candidates.Count;
             if (m <= 1)
                 return mandatoryLate;
@@ -222,17 +210,68 @@ namespace Lab_Test
 
                     if (bothCannotBeOnTime)
                     {
-                        // Добавляем одну обязательную просрочку (для пары)
                         conflictPairs++;
-                        // Помечаем обе, чтобы не образовывать пересечений (matching)
                         used.Add(u);
                         used.Add(v);
-                        break; // переходим к следующему i
+                        break; 
                     }
                 }
             }
 
             return mandatoryLate + conflictPairs;
+        }
+    }
+    public class BaseBranching : IBranching
+    {
+        public int Branch(IReadOnlyList<Node> leaves)
+        {
+            long minB = long.MaxValue;
+            int minBId = -1;
+            for (int i = 0; i < leaves.Count; i++)
+            {
+                if (leaves[i].FreeOrder.Count > 0 && leaves[i].B < minB)
+                {
+                    minB = leaves[i].B;
+                    minBId = i;
+                }
+            }
+            return minBId;
+        }
+    }
+    public class OptimizedBranching : IBranching
+    {
+        public int Branch(IReadOnlyList<Node> leaves)
+        {
+            long bestH = long.MaxValue;
+            long bestGap = long.MaxValue;
+            long bestB = long.MaxValue;
+            int bestOpen = int.MaxValue;
+            int bestId = -1;
+
+            for (int i = 0; i < leaves.Count; i++)
+            {
+                var leaf = leaves[i];
+                if (leaf.FreeOrder.Count == 0) continue;
+
+                long h = leaf.H;
+                long b = leaf.B;
+                long gap = b - h;
+                int open = leaf.FreeOrder.Count;
+
+                if (h < bestH ||
+                    (h == bestH && gap < bestGap) ||
+                    (h == bestH && gap == bestGap && b < bestB) ||
+                    (h == bestH && gap == bestGap && b == bestB && open < bestOpen))
+                {
+                    bestH = h;
+                    bestGap = gap;
+                    bestB = b;
+                    bestOpen = open;
+                    bestId = i;
+                }
+            }
+
+            return bestId;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Lab_Test
 
                 // БАЗОВЫЙ АЛГОРИТМ
                 var baseBranching = new BaseBranching();
-                var baseSolver = new BaseSolver(
+                var baseSolver = new BranchBoundMethod(
                     task.Times,
                     task.DirectiveTimes,
                     new BaseHighScore(),
@@ -41,7 +41,7 @@ namespace Lab_Test
 
                 // ОПТИМИЗИРОВАННЫЙ АЛГОРИТМ
                 var optimizedBranching = new OptimizedBranching();
-                var optimizedSolver = new BaseSolver(
+                var optimizedSolver = new BranchBoundMethod(
                     task.Times,
                     task.DirectiveTimes,
                     new OptimizedHighScore(),
@@ -55,15 +55,13 @@ namespace Lab_Test
 
                 // Вывод результатов
                 Console.WriteLine("\nБАЗОВЫЙ:");
-                var basePerm = baseResult.BakedData.Where(v => v != 0);
-                Console.WriteLine($"  Маршрут: {string.Join(" ", basePerm)}");
+                var basePerm = baseResult.CloseOrder.Where(v => v != 0);
                 Console.WriteLine($"  Критерий: {baseResult.H}");
                 Console.WriteLine($"  Просмотрено вершин: {baseLeaves}");
                 Console.WriteLine($"  Время: {sw1.ElapsedMilliseconds} мс");
 
                 Console.WriteLine("\nОПТИМИЗИРОВАННЫЙ:");
-                var optPerm = optimizedResult.BakedData.Where(v => v != 0);
-                Console.WriteLine($"  Маршрут: {string.Join(" ", optPerm)}");
+                var optPerm = optimizedResult.CloseOrder.Where(v => v != 0);
                 Console.WriteLine($"  Критерий: {optimizedResult.H}");
                 Console.WriteLine($"  Просмотрено вершин: {optimizedLeaves}");
                 Console.WriteLine($"  Время: {sw2.ElapsedMilliseconds} мс");
