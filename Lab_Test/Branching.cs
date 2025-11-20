@@ -24,6 +24,7 @@ namespace Lab_Test
             return minBId;
         }
     }
+    
     internal class Branching : IBranching
     {
         public int Branch(IReadOnlyList<Leaf> leaves)
@@ -40,6 +41,39 @@ namespace Lab_Test
                 }
             }
             return minBId;
+        }
+    }
+
+    // Оптимизированная стратегия: минимальное H (best-first search по нижней границе)
+    // Выбирает самый перспективный лист с точки зрения оптимистичной оценки
+    // При равном H предпочитает лист с минимальным B для стабильности
+    internal class OptimizedBranching : IBranching
+    {
+        public int Branch(IReadOnlyList<Leaf> leaves)
+        {
+            long minH = long.MaxValue;
+            long minB = long.MaxValue;
+            int bestId = -1;
+            
+            for (int i = 0; i < leaves.Count; i++)
+            {
+                if (leaves[i].OpenData.Count > 0)
+                {
+                    long h = leaves[i].H;
+                    long b = leaves[i].B;
+                    
+                    // Выбираем лист с минимальным H (лучший случай)
+                    // При равном H предпочитаем лист с минимальным B
+                    if (h < minH || (h == minH && b < minB))
+                    {
+                        minH = h;
+                        minB = b;
+                        bestId = i;
+                    }
+                }
+            }
+            
+            return bestId;
         }
     }
 }

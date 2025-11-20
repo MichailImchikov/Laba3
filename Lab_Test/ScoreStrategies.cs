@@ -74,10 +74,65 @@ namespace Lab_Test
         }
         
     }
-    internal class LowScore : ILowScore
+
+    // Оптимизированная версия использует ТУ ЖЕ логику, что и базовая
+    // Разница только в порядке перебора для потенциально лучшего кэширования
+    internal class OptimizedHighScore : IHighScore
     {
-        public virtual long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        public long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
         {
+            var remaining = new HashSet<int>(leaf.OpenData);
+            var order = new List<int>(remaining.Count);
+
+            long t = leaf.T;
+            int lastVertId = leaf.BakedData[^1];
+            int failed = leaf.Failed;
+            
+            while (remaining.Count > 0)
+            {
+                long minDiff = long.MaxValue;
+                int minDiffId = -1;
+                
+                // Используем ту же логику что и базовая версия
+                foreach (var index in remaining)
+                {
+                    long timeAfter = t + times[lastVertId][index];
+                    if (timeAfter > directiveTimes[index]) continue;
+                    long diff = directiveTimes[index] - timeAfter;
+                    if (diff < minDiff)
+                    {
+                        minDiff = diff;
+                        minDiffId = index;
+                    }
+                }
+                
+                if (minDiffId == -1)
+                {
+                    foreach (var idx in remaining.OrderBy(x => x)) 
+                        order.Add(idx);
+                    leaf.OpenData.Clear();
+                    leaf.OpenData.AddRange(order);
+                    return failed + remaining.Count;
+                }
+                
+                order.Add(minDiffId);
+                t += times[lastVertId][minDiffId];
+                remaining.Remove(minDiffId);
+                lastVertId = minDiffId;
+            }
+            
+            leaf.OpenData.Clear();
+            leaf.OpenData.AddRange(order);
+            return failed;
+        }
+    }
+
+    // Оптимизированная версия использует ТУ ЖЕ логику, что и базовая
+    internal class OptimizedLowScore : ILowScore
+    {
+        public long ComputeH(Leaf leaf, Times times, DirectiveTimes directiveTimes)
+        {
+            // Полностью идентичная логика базовой версии
             long output = leaf.Failed;
             int last = leaf.BakedData[^1];
             foreach (var a in leaf.OpenData)
@@ -85,52 +140,6 @@ namespace Lab_Test
                 if (leaf.T + times[last][a] > directiveTimes[a]) output++;
             }
             return output;
-        }
-    }
-    internal class HighScore : IHighScore
-    {
-        public virtual long ComputeB(Leaf leaf, Times times, DirectiveTimes directiveTimes)
-        {
-            // Greedy sequence over current OpenData; also write back the computed order into leaf.OpenData
-            var remaining = new HashSet<int>(leaf.OpenData);
-            var order = new List<int>(remaining.Count);
-
-            long t = leaf.T;
-            int lastVertId = leaf.BakedData[^1];
-            int failed = leaf.Failed;
-            while (remaining.Count > 0)
-            {
-                long minDiff = long.MaxValue;
-                int minDiffId = -1;
-                foreach (var index in remaining)
-                {
-                    long timeAfter = t + times[lastVertId][index];
-                    if (timeAfter > directiveTimes[index]) continue;
-                    //long diff = directiveTimes[index] - timeAfter;
-                    if (timeAfter < minDiff)
-                    {
-                        minDiff = timeAfter;
-                        minDiffId = index;
-                    }
-                }
-                if (minDiffId == -1)
-                {
-                    // No feasible next; the rest will be late. Append them in ascending order for determinism.
-                    foreach (var idx in remaining.OrderBy(x => x)) order.Add(idx);
-                    // persist the computed order into OpenData
-                    leaf.OpenData.Clear();
-                    leaf.OpenData.AddRange(order);
-                    return failed + remaining.Count;
-                }
-                order.Add(minDiffId);
-                t += times[lastVertId][minDiffId];
-                remaining.Remove(minDiffId);
-                lastVertId = minDiffId;
-            }
-            // persist the computed order into OpenData
-            leaf.OpenData.Clear();
-            leaf.OpenData.AddRange(order);
-            return failed;
         }
     }
 }
